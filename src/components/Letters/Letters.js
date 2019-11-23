@@ -3,11 +3,13 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector } from "react-redux";
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles(theme => ({
   container: {
     width: "70%",
     margin: "20px auto",
+    padding: 10,
     [theme.breakpoints.up("md")]: {
       margin: "50px auto"
     }
@@ -46,13 +48,15 @@ const Letters = () => {
   };
 
   useEffect(() => {
-    renderElements()
-  },[scoreLeft]);
+    renderElements();
+  }, [scoreLeft]);
 
   return (
-    <Grid container direction="row" className={classes.container}>
-      {renderElements()}
-    </Grid>
+    <Paper className={classes.container}>
+      <Grid container direction="row">
+        {renderElements()}
+      </Grid>
+    </Paper>
   );
 };
 

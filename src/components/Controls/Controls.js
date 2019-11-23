@@ -15,8 +15,9 @@ import {
   remainingNumbers,
   resetValuesOnDefault,
   saveChosenNumber,
-  changeGameStatus,
+  changeGameStatus
 } from "../../store/actions/actions";
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -31,6 +32,11 @@ const useStyles = makeStyles(theme => ({
   container: {
     position: "relative",
     zIndex: 9999
+  },
+  numberPaper: {
+    width: 150,
+    margin: '10px auto',
+    padding: 5,
   }
 }));
 
@@ -48,10 +54,10 @@ const Controls = () => {
   const inputElement = useRef(null);
 
   useEffect(() => {
-      if(allNumbers){
-        setNumbers(allNumbers)
-      }
-  },[allNumbers])
+    if (allNumbers) {
+      setNumbers(allNumbers);
+    }
+  }, [allNumbers]);
 
   const handleLevelChange = event => {
     setLevel(event.target.value);
@@ -86,27 +92,38 @@ const Controls = () => {
     clearInterval(intervalID.current);
     dispatch(changeGameStatus(false));
     dispatch(resetValuesOnDefault());
+    setChosenElement(null);
   };
 
   const startGame = () => {
     let scoreLeft = 26;
     let allNumbers = [...numbers];
     if (level === "easy") {
-      intervalID.current = setInterval(gameControl(scoreLeft,allNumbers), 5000);
+      intervalID.current = setInterval(
+        gameControl(scoreLeft, allNumbers),
+        5000
+      );
     } else if (level === "medium") {
-      intervalID.current = setInterval(gameControl(scoreLeft,allNumbers), 3500);
+      intervalID.current = setInterval(
+        gameControl(scoreLeft, allNumbers),
+        3500
+      );
     } else if (level === "hard") {
-      intervalID.current = setInterval(gameControl(scoreLeft,allNumbers), 2000);
+      intervalID.current = setInterval(
+        gameControl(scoreLeft, allNumbers),
+        2000
+      );
     }
   };
 
-  const gameControl = (scoreLeft,allNumbers) => () => {
-    if(scoreLeft > 0){
+  const gameControl = (scoreLeft, allNumbers) => () => {
+    if (scoreLeft > 0) {
       dispatch(remainingNumbers());
+      console.log("chosenElement", chosenElement);
       setLetter("");
       getRandomNumber(allNumbers);
       scoreLeft--;
-    }else {
+    } else {
       resetValues();
     }
   };
@@ -161,13 +178,15 @@ const Controls = () => {
         </Button>
       </Grid>
       <Grid item xs={12}>
-        <Typography
-          variant="h3"
-          component="h6"
-          className={classes.randomNumber}
-        >
-          {gameStatus ? chosenNumbers : 0}
-        </Typography>
+        <Paper className={classes.numberPaper}>
+          <Typography
+            variant="h3"
+            component="h6"
+            className={classes.randomNumber}
+          >
+            {gameStatus ? chosenNumbers : 0}
+          </Typography>
+        </Paper>
       </Grid>
       <Grid item xs={12}>
         <TextField
