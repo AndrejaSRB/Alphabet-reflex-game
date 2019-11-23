@@ -44,7 +44,8 @@ const Controls = () => {
   const gameStatus = useSelector(state => state.app.gameStatus);
   const classes = useStyles();
   const dispatch = useDispatch();
-  const intervalID = useRef(false);
+  const intervalID = useRef(null);
+  const inputElement = useRef(null);
 
   useEffect(() => {
       if(allNumbers){
@@ -67,6 +68,7 @@ const Controls = () => {
       resetValues();
     } else {
       startGame();
+      inputElement.current.focus();
       dispatch(changeGameStatus(true));
     }
   };
@@ -79,7 +81,6 @@ const Controls = () => {
     }
   };
 
-  
   const resetValues = () => {
     setChosenNumbers(null);
     clearInterval(intervalID.current);
@@ -102,13 +103,13 @@ const Controls = () => {
   const gameControl = (scoreLeft,allNumbers) => () => {
     if(scoreLeft > 0){
       dispatch(remainingNumbers());
-    setLetter("");
-    getRandomNumber(allNumbers);
-    scoreLeft--;
+      setLetter("");
+      getRandomNumber(allNumbers);
+      scoreLeft--;
     }else {
       resetValues();
     }
-  }
+  };
 
   const getRandomNumber = allNumbers => {
     const randomNumber = Math.floor(Math.random() * allNumbers.length);
@@ -175,6 +176,7 @@ const Controls = () => {
           variant="outlined"
           onChange={handleInputChange}
           value={letter}
+          inputRef={inputElement}
         />
       </Grid>
     </Grid>
