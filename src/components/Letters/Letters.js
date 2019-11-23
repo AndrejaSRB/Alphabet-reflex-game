@@ -10,6 +10,7 @@ const useStyles = makeStyles(theme => ({
     width: "70%",
     margin: "20px auto",
     padding: 10,
+    backgroundColor: '#f2f2f2',
     [theme.breakpoints.up("md")]: {
       margin: "50px auto"
     }

@@ -37,13 +37,15 @@ const useStyles = makeStyles(theme => ({
     width: 150,
     margin: '10px auto',
     padding: 5,
+    height: 79,
+    backgroundColor: '#f2f2f2',
   }
 }));
 
 const Controls = () => {
   const [level, setLevel] = useState("easy");
   const [letter, setLetter] = useState("");
-  const [chosenNumbers, setChosenNumbers] = useState(null);
+  const [chosenNumbers, setChosenNumbers] = useState(0);
   const [chosenElement, setChosenElement] = useState(null);
   const [numbers, setNumbers] = useState([]);
   const allNumbers = useSelector(state => state.app.allNumbers);
@@ -82,7 +84,9 @@ const Controls = () => {
   const checkValue = letter => {
     if (letter.toLowerCase() === chosenElement.letter.toLowerCase()) {
       dispatch(successfulChosenNumber(chosenElement));
-    } else {
+    }else if(letter === ""){
+      return
+    }else {
       dispatch(missedChosenNumber(chosenElement));
     }
   };
@@ -93,6 +97,7 @@ const Controls = () => {
     dispatch(changeGameStatus(false));
     dispatch(resetValuesOnDefault());
     setChosenElement(null);
+    setLetter("");
   };
 
   const startGame = () => {
@@ -119,7 +124,6 @@ const Controls = () => {
   const gameControl = (scoreLeft, allNumbers) => () => {
     if (scoreLeft > 0) {
       dispatch(remainingNumbers());
-      console.log("chosenElement", chosenElement);
       setLetter("");
       getRandomNumber(allNumbers);
       scoreLeft--;
