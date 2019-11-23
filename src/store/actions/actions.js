@@ -11,3 +11,7 @@ export const successfulChosenNumber = payload => ({
 export const missedChosenNumber = payload => ({
   type: actionTypes.MISS, payload
 });
+
+export const resetValuesOnDefault = () => ({
+  type: actionTypes.RESET_ON_DEFAULT
+})

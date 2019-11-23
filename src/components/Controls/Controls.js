@@ -12,7 +12,8 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   successfulChosenNumber,
   missedChosenNumber,
-  remainingNumbers
+  remainingNumbers,
+  resetValuesOnDefault
 } from "../../store/actions/actions";
 
 const useStyles = makeStyles(theme => ({
@@ -73,6 +74,7 @@ const Controls = () => {
     setChosenNumbers(null);
     clearInterval(intervalID);
     setIsGameStared(!isGameStarted);
+    dispatch(resetValuesOnDefault());
   };
 
   const startGame = numbers => {

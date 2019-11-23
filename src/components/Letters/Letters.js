@@ -28,7 +28,6 @@ const Letters = () => {
   const data = useSelector(state => state.app.allNumbers);
   const scoreLeft = useSelector(state => state.app.scoreLeft);
 
-
   const renderElements = () => {
     if (data) {
       return data.map(element => (

@@ -45,6 +45,12 @@ const updateElementColor = (element, status) => {
   return numbers;
 };
 
+const resetOnDefault = () => {
+  const numbers = [...initialState.allNumbers];
+  numbers.forEach(element => (element.color = "left"));
+  return numbers;
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.REMAINING_NUMBERS:
@@ -65,6 +71,15 @@ const reducer = (state = initialState, action) => {
         ...state,
         scoreMissed: state.scoreMissed + 1,
         allNumbers: arrayNumbers
+      };
+    case actionTypes.RESET_ON_DEFAULT:
+      const defaultValues = resetOnDefault();
+      return {
+        ...state,
+        allNumbers: defaultValues,
+        scoreLeft: 26,
+        scoreMissed: 0,
+        scoreHit: 0
       };
     default:
       return state;
