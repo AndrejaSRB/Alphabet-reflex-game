@@ -1,4 +1,7 @@
 export const REMAINING_NUMBERS = "REMAINING_NUMBERS";
 export const SUCCESS = "SUCCESS";
 export const MISS = "MISS";
-export const RESET_ON_DEFAULT = 'RESET_ON_DEFAULT'
+export const RESET_ON_DEFAULT = 'RESET_ON_DEFAULT';
+export const SAVE_CHOSEN_NUMBER = 'SAVE_CHOSEN_NUMBER';
+export const CHANGE_GAME_STATUS = 'CHANGE_GAME_STATUS';
+

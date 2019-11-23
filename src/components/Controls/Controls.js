@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -13,7 +13,9 @@ import {
   successfulChosenNumber,
   missedChosenNumber,
   remainingNumbers,
-  resetValuesOnDefault
+  resetValuesOnDefault,
+  saveChosenNumber,
+  changeGameStatus,
 } from "../../store/actions/actions";
 
 const useStyles = makeStyles(theme => ({
@@ -37,11 +39,20 @@ const Controls = () => {
   const [letter, setLetter] = useState("");
   const [chosenNumbers, setChosenNumbers] = useState(null);
   const [chosenElement, setChosenElement] = useState(null);
-  const [intervalID, setInterlID] = useState(null);
-  const [isGameStarted, setIsGameStared] = useState(false);
+  // const [isGameStarted, setIsGameStared] = useState(false);
+  const [numbers, setNumbers] = useState([]);
   const allNumbers = useSelector(state => state.app.allNumbers);
+  const chosenNumber = useSelector(state => state.app.chosenNumber);
+  const gameStatus = useSelector(state => state.app.gameStatus);
   const classes = useStyles();
   const dispatch = useDispatch();
+  const intervalID = useRef(false);
+
+  useEffect(() => {
+      if(allNumbers){
+        setNumbers(allNumbers)
+      }
+  },[allNumbers])
 
   const handleLevelChange = event => {
     setLevel(event.target.value);
@@ -52,6 +63,16 @@ const Controls = () => {
     checkValue(event.target.value);
   };
 
+  const handleGameBtn = () => {
+    if (gameStatus === true) {
+      dispatch(changeGameStatus(false));
+      resetValues();
+    } else {
+      startGame();
+      dispatch(changeGameStatus(true));
+    }
+  };
+
   const checkValue = letter => {
     if (letter.toLowerCase() === chosenElement.letter.toLowerCase()) {
       dispatch(successfulChosenNumber(chosenElement));
@@ -60,49 +81,51 @@ const Controls = () => {
     }
   };
 
-  const handleGameBtn = () => {
-    if (isGameStarted === true) {
-      resetValues();
-    } else {
-      setIsGameStared(!isGameStarted);
-      let numbers = [...allNumbers];
-      startGame(numbers);
-    }
-  };
-
+  
   const resetValues = () => {
     setChosenNumbers(null);
-    clearInterval(intervalID);
-    setIsGameStared(!isGameStarted);
+    clearInterval(intervalID.current);
+    dispatch(changeGameStatus(false));
     dispatch(resetValuesOnDefault());
   };
 
-  const startGame = numbers => {
-    let intervalID = null;
+  const startGame = () => {
+    let scoreLeft = 26;
     if (level === "easy") {
-      intervalID = setInterval(getRandomNumber(numbers), 5000);
+      intervalID.current = setInterval(gameControl(scoreLeft), 5000);
     } else if (level === "medium") {
-      intervalID = setInterval(getRandomNumber(numbers), 3500);
+      intervalID.current = setInterval(gameControl(scoreLeft), 3500);
     } else if (level === "hard") {
-      intervalID = setInterval(getRandomNumber(numbers), 2000);
+      intervalID.current = setInterval(gameControl(scoreLeft), 2000);
     }
-    setInterlID(intervalID);
   };
 
-  const getRandomNumber = numbers => () => {
-    dispatch(remainingNumbers());
+  const gameControl = scoreLeft => () => {
+    if(scoreLeft > 0){
+      dispatch(remainingNumbers());
     setLetter("");
-    const randomNumber = Math.floor(Math.random() * numbers.length) + 1;
-    const chosenElement = numbers[randomNumber];
-    const elementIndex = numbers.indexOf(chosenElement);
+    getRandomNumber();
+    scoreLeft--;
+    }else {
+      resetValues();
+    }
+  }
+
+  const getRandomNumber = () => {
+    let allNumbers = [...numbers]
+    const randomNumber = Math.floor(Math.random() * allNumbers.length);
+    const chosenElement = allNumbers[randomNumber];
+    const elementIndex = allNumbers.indexOf(chosenElement);
     setChosenNumbers(chosenElement.id);
     setChosenElement(chosenElement);
-    numbers.splice(elementIndex, 1);
+    dispatch(saveChosenNumber(chosenElement));
+    allNumbers.splice(elementIndex, 1);
+    setNumbers(allNumbers);
   };
 
-  const gameButton = isGameStarted ? "Stop Game" : "Start Game";
+  const gameButton = gameStatus ? "Stop Game" : "Start Game";
 
-  const radioButtonDisabled = isGameStarted ? true : false;
+  const radioButtonDisabled = gameStatus ? true : false;
 
   return (
     <Grid container direction="column" className={classes.container}>
@@ -144,7 +167,7 @@ const Controls = () => {
           component="h6"
           className={classes.randomNumber}
         >
-          {isGameStarted ? chosenNumbers : 0}
+          {gameStatus ? chosenNumbers : 0}
         </Typography>
       </Grid>
       <Grid item xs={12}>

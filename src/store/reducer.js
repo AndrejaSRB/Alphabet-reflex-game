@@ -31,7 +31,9 @@ const initialState = {
   ],
   scoreLeft: 26,
   scoreMissed: 0,
-  scoreHit: 0
+  scoreHit: 0,
+  chosenNumber: null,
+  gameStatus: false
 };
 
 const updateElementColor = (element, status) => {
@@ -54,9 +56,16 @@ const resetOnDefault = () => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.REMAINING_NUMBERS:
+      let remainingNum = state.scoreLeft > 0 ? state.scoreLeft - 1 : 0;
       return {
         ...state,
-        scoreLeft: state.scoreLeft - 1
+        scoreLeft: remainingNum
+      };
+
+    case actionTypes.CHANGE_GAME_STATUS:
+      return {
+        ...state,
+        gameStatus: action.payload
       };
     case actionTypes.SUCCESS:
       const numbersArray = updateElementColor(action.payload, "success");
@@ -72,6 +81,11 @@ const reducer = (state = initialState, action) => {
         scoreMissed: state.scoreMissed + 1,
         allNumbers: arrayNumbers
       };
+    case actionTypes.SAVE_CHOSEN_NUMBER:
+      return {
+        ...state,
+        chosenNumber: action.payload
+      };
     case actionTypes.RESET_ON_DEFAULT:
       const defaultValues = resetOnDefault();
       return {
@@ -79,7 +93,8 @@ const reducer = (state = initialState, action) => {
         allNumbers: defaultValues,
         scoreLeft: 26,
         scoreMissed: 0,
-        scoreHit: 0
+        scoreHit: 0,
+        chosenNumber: null
       };
     default:
       return state;
