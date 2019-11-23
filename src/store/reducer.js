@@ -1,4 +1,4 @@
-import * as actionTypes from './actions/actionTypes';
+import * as actionTypes from "./actions/actionTypes";
 
 const initialState = {
   allNumbers: [
@@ -31,15 +31,40 @@ const initialState = {
   ],
   scoreLeft: 26,
   scoreMissed: 0,
-  scoreHit: 0,
+  scoreHit: 0
+};
+
+const updateElementColor = (element, status) => {
+  const numbers = [...initialState.allNumbers];
+  const elementIndex = numbers.indexOf(element);
+  if (status === "success") {
+    numbers[elementIndex].color = "hit";
+  } else {
+    numbers[elementIndex].color = "miss";
+  }
+  return numbers;
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.CHOSEN_NUMBER:
+    case actionTypes.REMAINING_NUMBERS:
       return {
         ...state,
-        scoreLeft: state.scoreLeft - 1,
+        scoreLeft: state.scoreLeft - 1
+      };
+    case actionTypes.SUCCESS:
+      const numbersArray = updateElementColor(action.payload, "success");
+      return {
+        ...state,
+        scoreHit: state.scoreHit + 1,
+        allNumbers: numbersArray
+      };
+    case actionTypes.MISS:
+      const arrayNumbers = updateElementColor(action.payload, "miss");
+      return {
+        ...state,
+        scoreMissed: state.scoreMissed + 1,
+        allNumbers: arrayNumbers
       };
     default:
       return state;

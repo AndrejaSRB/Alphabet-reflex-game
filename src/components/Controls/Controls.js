@@ -8,7 +8,12 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  successfulChosenNumber,
+  missedChosenNumber,
+  remainingNumbers
+} from "../../store/actions/actions";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -29,11 +34,13 @@ const useStyles = makeStyles(theme => ({
 const Controls = () => {
   const [level, setLevel] = useState("easy");
   const [letter, setLetter] = useState("");
-  const [chosenNumbers, setChosenNumbers] = useState([]);
+  const [chosenNumbers, setChosenNumbers] = useState(null);
+  const [chosenElement, setChosenElement] = useState(null);
   const [intervalID, setInterlID] = useState(null);
   const [isGameStarted, setIsGameStared] = useState(false);
   const allNumbers = useSelector(state => state.app.allNumbers);
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const handleLevelChange = event => {
     setLevel(event.target.value);
@@ -41,17 +48,31 @@ const Controls = () => {
 
   const handleInputChange = event => {
     setLetter(event.target.value);
+    checkValue(event.target.value);
+  };
+
+  const checkValue = letter => {
+    if (letter.toLowerCase() === chosenElement.letter.toLowerCase()) {
+      dispatch(successfulChosenNumber(chosenElement));
+    } else {
+      dispatch(missedChosenNumber(chosenElement));
+    }
   };
 
   const handleGameBtn = () => {
     if (isGameStarted === true) {
-      clearInterval(intervalID);
-      setIsGameStared(!isGameStarted);
+      resetValues();
     } else {
       setIsGameStared(!isGameStarted);
       let numbers = [...allNumbers];
       startGame(numbers);
     }
+  };
+
+  const resetValues = () => {
+    setChosenNumbers(null);
+    clearInterval(intervalID);
+    setIsGameStared(!isGameStarted);
   };
 
   const startGame = numbers => {
@@ -67,15 +88,20 @@ const Controls = () => {
   };
 
   const getRandomNumber = numbers => () => {
+    dispatch(remainingNumbers());
+    setLetter("");
     const randomNumber = Math.floor(Math.random() * numbers.length) + 1;
     const chosenElement = numbers[randomNumber];
     const elementIndex = numbers.indexOf(chosenElement);
-    numbers.splice(elementIndex, 1);
     setChosenNumbers(chosenElement.id);
+    setChosenElement(chosenElement);
+    numbers.splice(elementIndex, 1);
   };
 
   const gameButton = isGameStarted ? "Stop Game" : "Start Game";
+
   const radioButtonDisabled = isGameStarted ? true : false;
+
   return (
     <Grid container direction="column" className={classes.container}>
       <Grid item xs={12}>
