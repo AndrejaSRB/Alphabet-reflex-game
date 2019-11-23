@@ -39,10 +39,8 @@ const Controls = () => {
   const [letter, setLetter] = useState("");
   const [chosenNumbers, setChosenNumbers] = useState(null);
   const [chosenElement, setChosenElement] = useState(null);
-  // const [isGameStarted, setIsGameStared] = useState(false);
   const [numbers, setNumbers] = useState([]);
   const allNumbers = useSelector(state => state.app.allNumbers);
-  const chosenNumber = useSelector(state => state.app.chosenNumber);
   const gameStatus = useSelector(state => state.app.gameStatus);
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -100,9 +98,9 @@ const Controls = () => {
     }
   };
 
-  const gameControl = scoreLeft => () => {
+  const gameControl = (scoreLeft,lets) => () => {
     if(scoreLeft > 0){
-      dispatch(remainingNumbers());
+    dispatch(remainingNumbers());
     setLetter("");
     getRandomNumber();
     scoreLeft--;
