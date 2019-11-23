@@ -44,7 +44,7 @@ const Score = () => {
     >
       <Grid item xs={12}>
         <Typography variant="subtitle2" component="h3" gutterBottom>
-          Score
+          SCORE
         </Typography>
       </Grid>
       <Grid item xs={12}>
