@@ -89,34 +89,34 @@ const Controls = () => {
 
   const startGame = () => {
     let scoreLeft = 26;
+    let allNumbers = [...numbers];
     if (level === "easy") {
       intervalID.current = setInterval(gameControl(scoreLeft), 5000);
     } else if (level === "medium") {
-      intervalID.current = setInterval(gameControl(scoreLeft), 3500);
+      intervalID.current = setInterval(gameControl(scoreLeft,allNumbers), 3500);
     } else if (level === "hard") {
       intervalID.current = setInterval(gameControl(scoreLeft), 2000);
     }
   };
 
-  const gameControl = (scoreLeft,lets) => () => {
+  const gameControl = (scoreLeft,allNumbers) => () => {
     if(scoreLeft > 0){
-    dispatch(remainingNumbers());
+      dispatch(remainingNumbers());
     setLetter("");
-    getRandomNumber();
+    getRandomNumber(allNumbers);
     scoreLeft--;
     }else {
       resetValues();
     }
   }
 
-  const getRandomNumber = () => {
-    let allNumbers = [...numbers]
+  const getRandomNumber = allNumbers => {
     const randomNumber = Math.floor(Math.random() * allNumbers.length);
-    const chosenElement = allNumbers[randomNumber];
-    const elementIndex = allNumbers.indexOf(chosenElement);
-    setChosenNumbers(chosenElement.id);
-    setChosenElement(chosenElement);
-    dispatch(saveChosenNumber(chosenElement));
+    const getRandomlyElement = allNumbers[randomNumber];
+    const elementIndex = allNumbers.indexOf(getRandomlyElement);
+    setChosenNumbers(getRandomlyElement.id);
+    setChosenElement(getRandomlyElement);
+    dispatch(saveChosenNumber(getRandomlyElement));
     allNumbers.splice(elementIndex, 1);
     setNumbers(allNumbers);
   };
