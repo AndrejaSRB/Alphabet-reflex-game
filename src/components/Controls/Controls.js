@@ -91,11 +91,11 @@ const Controls = () => {
     let scoreLeft = 26;
     let allNumbers = [...numbers];
     if (level === "easy") {
-      intervalID.current = setInterval(gameControl(scoreLeft), 5000);
+      intervalID.current = setInterval(gameControl(scoreLeft,allNumbers), 5000);
     } else if (level === "medium") {
       intervalID.current = setInterval(gameControl(scoreLeft,allNumbers), 3500);
     } else if (level === "hard") {
-      intervalID.current = setInterval(gameControl(scoreLeft), 2000);
+      intervalID.current = setInterval(gameControl(scoreLeft,allNumbers), 2000);
     }
   };
 
