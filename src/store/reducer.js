@@ -81,6 +81,13 @@ const reducer = (state = initialState, action) => {
         scoreMissed: state.scoreMissed + 1,
         allNumbers: arrayNumbers
       };
+    case actionTypes.NO_INPUTTED_NUMBER:
+      const allNumbers = updateElementColor(state.chosenNumber, "miss");
+      return {
+        ...state,
+        scoreMissed: state.scoreMissed + 1,
+        allNumbers: allNumbers
+      };
     case actionTypes.SAVE_CHOSEN_NUMBER:
       return {
         ...state,

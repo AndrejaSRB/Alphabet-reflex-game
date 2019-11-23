@@ -15,7 +15,8 @@ import {
   remainingNumbers,
   resetValuesOnDefault,
   saveChosenNumber,
-  changeGameStatus
+  changeGameStatus,
+  noInputtedNumber
 } from "../../store/actions/actions";
 import Paper from "@material-ui/core/Paper";
 
@@ -35,10 +36,10 @@ const useStyles = makeStyles(theme => ({
   },
   numberPaper: {
     width: 150,
-    margin: '10px auto',
+    margin: "10px auto",
     padding: 5,
     height: 79,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: "#f2f2f2"
   }
 }));
 
@@ -47,6 +48,7 @@ const Controls = () => {
   const [letter, setLetter] = useState("");
   const [chosenNumbers, setChosenNumbers] = useState(0);
   const [chosenElement, setChosenElement] = useState(null);
+  const [disableInput, setDisableInput] = useState(true);
   const [numbers, setNumbers] = useState([]);
   const allNumbers = useSelector(state => state.app.allNumbers);
   const gameStatus = useSelector(state => state.app.gameStatus);
@@ -76,7 +78,6 @@ const Controls = () => {
       resetValues();
     } else {
       startGame();
-      inputElement.current.focus();
       dispatch(changeGameStatus(true));
     }
   };
@@ -84,9 +85,9 @@ const Controls = () => {
   const checkValue = letter => {
     if (letter.toLowerCase() === chosenElement.letter.toLowerCase()) {
       dispatch(successfulChosenNumber(chosenElement));
-    }else if(letter === ""){
-      return
-    }else {
+    } else if (letter === "") {
+      return;
+    } else {
       dispatch(missedChosenNumber(chosenElement));
     }
   };
@@ -98,6 +99,7 @@ const Controls = () => {
     dispatch(resetValuesOnDefault());
     setChosenElement(null);
     setLetter("");
+    setDisableInput(true);
   };
 
   const startGame = () => {
@@ -105,26 +107,28 @@ const Controls = () => {
     let allNumbers = [...numbers];
     if (level === "easy") {
       intervalID.current = setInterval(
-        gameControl,
-        5000,
-        scoreLeft, allNumbers
+        gameControl(scoreLeft, allNumbers),
+        5000
       );
     } else if (level === "medium") {
       intervalID.current = setInterval(
-        gameControl,
-        3500,
-        scoreLeft, allNumbers
+        gameControl(scoreLeft, allNumbers),
+        3500
       );
     } else if (level === "hard") {
       intervalID.current = setInterval(
-        gameControl,
-        2000,
-        scoreLeft, allNumbers
+        gameControl(scoreLeft, allNumbers),
+        2000
       );
     }
   };
 
-  const gameControl = (scoreLeft, allNumbers) => {
+  const gameControl = (scoreLeft, allNumbers) => () => {
+    if (scoreLeft !== 26) {
+      if (inputElement.current.value === "") {
+        dispatch(noInputtedNumber());
+      }
+    }
     if (scoreLeft > 0) {
       dispatch(remainingNumbers());
       setLetter("");
@@ -136,6 +140,8 @@ const Controls = () => {
   };
 
   const getRandomNumber = allNumbers => {
+    setDisableInput(false);
+    inputElement.current.focus();
     const randomNumber = Math.floor(Math.random() * allNumbers.length);
     const getRandomlyElement = allNumbers[randomNumber];
     const elementIndex = allNumbers.indexOf(getRandomlyElement);
@@ -203,6 +209,7 @@ const Controls = () => {
           onChange={handleInputChange}
           value={letter}
           inputRef={inputElement}
+          disabled={disableInput}
         />
       </Grid>
     </Grid>

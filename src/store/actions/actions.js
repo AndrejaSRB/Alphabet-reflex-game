@@ -12,6 +12,10 @@ export const missedChosenNumber = payload => ({
   type: actionTypes.MISS, payload
 });
 
+export const noInputtedNumber = payload => ({
+  type: actionTypes.NO_INPUTTED_NUMBER, payload
+});
+
 export const resetValuesOnDefault = () => ({
   type: actionTypes.RESET_ON_DEFAULT
 });

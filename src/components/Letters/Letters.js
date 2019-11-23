@@ -10,19 +10,28 @@ const useStyles = makeStyles(theme => ({
     width: "70%",
     margin: "20px auto",
     padding: 10,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: "#f2f2f2",
     [theme.breakpoints.up("md")]: {
       margin: "50px auto"
     }
   },
   hit: {
-    color: "#4ccc43"
+    color: "#4ccc43",
+    [theme.breakpoints.up("lg")]: {
+      padding: 10
+    }
   },
   miss: {
-    color: "#d63b3b"
+    color: "#d63b3b",
+    [theme.breakpoints.up("lg")]: {
+      padding: 10
+    }
   },
   left: {
-    color: "#446ec9"
+    color: "#446ec9",
+    [theme.breakpoints.up("lg")]: {
+      padding: 10
+    }
   }
 }));
 
