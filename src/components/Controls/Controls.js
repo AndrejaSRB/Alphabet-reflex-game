@@ -105,23 +105,26 @@ const Controls = () => {
     let allNumbers = [...numbers];
     if (level === "easy") {
       intervalID.current = setInterval(
-        gameControl(scoreLeft, allNumbers),
-        5000
+        gameControl,
+        5000,
+        scoreLeft, allNumbers
       );
     } else if (level === "medium") {
       intervalID.current = setInterval(
-        gameControl(scoreLeft, allNumbers),
-        3500
+        gameControl,
+        3500,
+        scoreLeft, allNumbers
       );
     } else if (level === "hard") {
       intervalID.current = setInterval(
-        gameControl(scoreLeft, allNumbers),
-        2000
+        gameControl,
+        2000,
+        scoreLeft, allNumbers
       );
     }
   };
 
-  const gameControl = (scoreLeft, allNumbers) => () => {
+  const gameControl = (scoreLeft, allNumbers) => {
     if (scoreLeft > 0) {
       dispatch(remainingNumbers());
       setLetter("");
